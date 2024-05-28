@@ -174,7 +174,7 @@
         <!-- check keycloak-dependencies-server-all effective pom -->
         <infinispan.version>14.0.6.Final</infinispan.version>
         <resteasy.version>6.2.4.Final</resteasy.version>
-        <liquidbase.version>4.25.1</liquidbase.version>
+        <liquibase.version>4.25.1</liquibase.version>
 	</properties>
 
 </project>
