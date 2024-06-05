@@ -4,7 +4,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
-import { JwtHelperService } from "@auth0/angular-jwt";
  
 export class Foo {
   constructor(
@@ -14,10 +13,8 @@ export class Foo {
 
 @Injectable()
 export class AppService {
-   public jwtHelper = new JwtHelperService();
-   public clientId = 'jwtClient';
-   public organization = "none";
-   public redirectUri = 'http://localhost:8084/';
+   public clientId = 'newClient';
+   public redirectUri = 'http://localhost:8089/';
 
   constructor(
     private _http: HttpClient){}
@@ -26,11 +23,10 @@ export class AppService {
     let params = new URLSearchParams();   
     params.append('grant_type','authorization_code');
     params.append('client_id', this.clientId);
-    params.append('client_secret', 'jwtClientSecret');
     params.append('redirect_uri', this.redirectUri);
     params.append('code',code);
 
-    let headers = new HttpHeaders({'Content-type': 'application/x-www-form-urlencoded; charset=utf-8', 'Authorization': 'Basic '+btoa(this.clientId+":secret")});
+    let headers = new HttpHeaders({'Content-type': 'application/x-www-form-urlencoded; charset=utf-8'});
      this._http.post('http://localhost:8083/auth/realms/baeldung/protocol/openid-connect/token', params.toString(), { headers: headers })
     .subscribe(
       data => this.saveToken(data),
@@ -41,9 +37,9 @@ export class AppService {
   saveToken(token){
     var expireDate = new Date().getTime() + (1000 * token.expires_in);
     Cookie.set("access_token", token.access_token, expireDate);
+    Cookie.set("id_token", token.id_token, expireDate);
     console.log('Obtained Access token');
-    this.getOrganization();
-    window.location.href = 'http://localhost:8084';
+    window.location.href = 'http://localhost:8089';
   }
 
   getResource(resourceUrl) : Observable<any>{
@@ -57,16 +53,13 @@ export class AppService {
   } 
 
   logout() {
+    let token = Cookie.get('id_token');
     Cookie.delete('access_token');
-    window.location.reload();
-  }
-  
-  getOrganization(){
-    	var token = Cookie.get("access_token");
-    	
-    	var payload = this.jwtHelper.decodeToken(token);
-    	console.log(payload);
-    	this.organization = payload.organization; 
-    	return this.organization;
-    }
+    Cookie.delete('id_token');
+    let logoutURL = "http://localhost:8083/auth/realms/baeldung/protocol/openid-connect/logout?id_token_hint="
+      + token
+      + "&post_logout_redirect_uri=" + this.redirectUri;
+
+    window.location.href = logoutURL;
+  } 
 }
