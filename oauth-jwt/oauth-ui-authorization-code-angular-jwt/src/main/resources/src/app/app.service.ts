@@ -14,7 +14,7 @@ export class Foo {
 @Injectable()
 export class AppService {
    public clientId = 'newClient';
-   public redirectUri = 'http://localhost:8089/';
+   public redirectUri = 'http://localhost:8084/';
 
   constructor(
     private _http: HttpClient){}
