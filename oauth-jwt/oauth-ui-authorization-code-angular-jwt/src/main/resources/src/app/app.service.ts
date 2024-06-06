@@ -13,7 +13,7 @@ export class Foo {
 
 @Injectable()
 export class AppService {
-   public clientId = 'newClient';
+   public clientId = 'jwtClient';
    public redirectUri = 'http://localhost:8084/';
 
   constructor(
@@ -23,10 +23,11 @@ export class AppService {
     let params = new URLSearchParams();   
     params.append('grant_type','authorization_code');
     params.append('client_id', this.clientId);
+    params.append('client_secret', 'jwtClientSecret');
     params.append('redirect_uri', this.redirectUri);
     params.append('code',code);
 
-    let headers = new HttpHeaders({'Content-type': 'application/x-www-form-urlencoded; charset=utf-8'});
+    let headers = new HttpHeaders({'Content-type': 'application/x-www-form-urlencoded; charset=utf-8', 'Authorization': 'Basic '+btoa(this.clientId+":secret")});
      this._http.post('http://localhost:8083/auth/realms/baeldung/protocol/openid-connect/token', params.toString(), { headers: headers })
     .subscribe(
       data => this.saveToken(data),
@@ -39,7 +40,7 @@ export class AppService {
     Cookie.set("access_token", token.access_token, expireDate);
     Cookie.set("id_token", token.id_token, expireDate);
     console.log('Obtained Access token');
-    window.location.href = 'http://localhost:8089';
+    window.location.href = 'http://localhost:8084';
   }
 
   getResource(resourceUrl) : Observable<any>{
