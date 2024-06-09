@@ -497,7 +497,7 @@
           }
         }
       ],
-    "defaultClientScopes" : [ "role_list", "profile" ],
+    "defaultClientScopes" : [ "role_list", "profile", "openid" ],
     "optionalClientScopes" : [ "web-origins", "address", "read", "phone", "roles", "offline_access", "microprofile-jwt", "write", "email" ]
   }, {
     "id" : "6a4bfbd0-576d-4778-af56-56f876647355",
@@ -936,6 +936,14 @@
       "display.on.consent.screen" : "true"
     }
   }, {
+    "id" : "c1a2eb23-25c6-4be7-a791-ffdca99c83f7",
+    "name" : "openid",
+    "protocol" : "openid-connect",
+    "attributes" : {
+      "include.in.token.scope" : "true",
+      "display.on.consent.screen" : "true"
+    }
+  },{
     "id" : "18e141bf-dabe-4858-879c-dbc439cdead4",
     "name" : "role_list",
     "description" : "SAML role list",
@@ -1679,6 +1687,6 @@
     "waitIncrementSeconds" : "60",
     "offlineSessionMaxLifespanEnabled" : "false"
   },
-  "keycloakVersion" : "8.0.0",
+  "keycloakVersion" : "22.0.0",
   "userManagedAccessAllowed" : false
 }

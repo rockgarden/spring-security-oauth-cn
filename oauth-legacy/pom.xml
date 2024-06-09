@@ -18,6 +18,7 @@
         <module>oauth-ui-implicit-angularjs-legacy</module>
         <module>oauth-ui-password-angularjs-legacy</module>
         <module>oauth-zuul-gateway</module>
+        <module>oauth-microservices</module>
     </modules>
 
 </project>

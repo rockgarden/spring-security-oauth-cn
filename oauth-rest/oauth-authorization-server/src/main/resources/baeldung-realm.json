@@ -433,7 +433,8 @@
     "secret" : "newClientSecret",
     "redirectUris" : [ "http://localhost:8082/new-client/login/oauth2/code/custom",
     "http://localhost:8089/",
-    "http://localhost:8089/auth/redirect/"],
+    "http://localhost:8089/auth/redirect/",
+    "http://localhost:8082/oauth-client-spring/login/oauth2/code/custom"],
     "webOrigins" : [ "+" ],
     "notBefore" : 0,
     "bearerOnly" : false,
@@ -442,7 +443,7 @@
     "implicitFlowEnabled" : true,
     "directAccessGrantsEnabled" : true,
     "serviceAccountsEnabled" : false,
-    "publicClient" : false,
+    "publicClient" : true,
     "frontchannelLogout" : false,
     "protocol" : "openid-connect",
     "attributes" : {
@@ -1610,6 +1611,6 @@
     "waitIncrementSeconds" : "60",
     "offlineSessionMaxLifespanEnabled" : "false"
   },
-  "keycloakVersion" : "8.0.0",
+  "keycloakVersion" : "22.0.0",
   "userManagedAccessAllowed" : false
 }

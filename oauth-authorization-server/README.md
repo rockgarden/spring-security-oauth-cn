@@ -16,3 +16,4 @@ Spring OAuth Client.
 ### Relevant Articles:
 
 - [Spring Security OAuth Authorization Server](https://www.baeldung.com/spring-security-oauth-auth-server)
+- [Add Authorities as Custom Claims in JWT Access Tokens in Spring Authorization Server](https://www.baeldung.com/spring-jwt-access-tokens-authorities-custom-claims)

@@ -11,7 +11,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.2.6.RELEASE</version>
+        <version>3.1.1</version>
         <relativePath />
     </parent>
 
@@ -19,13 +19,19 @@
     
         <dependency>
             <groupId>org.keycloak</groupId>
-            <artifactId>keycloak-core</artifactId>
+            <artifactId>keycloak-services</artifactId>
             <version>${keycloak.version}</version>
+            <exclusions>
+            	<exclusion>
+            		<groupId>org.jboss</groupId>
+            		<artifactId>jandex</artifactId>
+            	</exclusion>
+            </exclusions>
         </dependency>
-
+        
         <dependency>
             <groupId>org.keycloak</groupId>
-            <artifactId>keycloak-server-spi</artifactId>
+            <artifactId>keycloak-model-legacy</artifactId>
             <version>${keycloak.version}</version>
         </dependency>
         
@@ -72,8 +78,17 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <excludes>
-                        <exclude>**/*LiveTest.java</exclude>
+                        <exclude>**/*IntegrationTest.java</exclude>
                     </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <testExcludes>
+                        <testExclude>**/*IntegrationTest.java</testExclude>
+                    </testExcludes>
                 </configuration>
             </plugin>
         </plugins>
@@ -82,14 +97,13 @@
     <properties>
         <!-- non-dependencies -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>11</java.version>
+        <java.version>17</java.version>
 
-        <keycloak.version>11.0.2</keycloak.version>
+        <keycloak.version>24.0.3</keycloak.version>
 
         <!-- these should be updated together with Keycloak -->
         <!-- check keycloak-dependencies-server-all effective pom -->
-        <infinispan.version>10.1.8.Final</infinispan.version>
-        <resteasy.version>3.12.1.Final</resteasy.version>
+        <infinispan.version>14.0.6.Final</infinispan.version>
     </properties>
 
 </project>

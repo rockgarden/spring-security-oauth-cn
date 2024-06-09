@@ -48,7 +48,7 @@ update_configs:
           version_requirement: "3.0.4"
       - match:
           dependency_name: "minimist"
-          version_requirement: "0.0.8"
+          version_requirement: ["0.0.8","1.2.6","1.2.8"]
       - match:
           dependency_name: "minipass"
           version_requirement: "2.3.5"
@@ -135,7 +135,7 @@ update_configs:
           version_requirement: "1.1.3"
       - match:
           dependency_name: "mkdirp"
-          version_requirement: "0.5.1"
+          version_requirement: ["0.5.1","0.5.6"]
       - match:
           dependency_name: "js-yaml"
           version_requirement: "3.12.0"
@@ -169,6 +169,42 @@ update_configs:
       - match:
           dependency_name: "eventsource"
           version_requirement: "1.0.7"
+      - match:
+          dependency_name: "loader-utils"
+          version_requirement: ["1.2.3", "1.4.0", "3.2.1"]
+      - match:
+          dependency_name: "@angular-devkit/build-angular"
+          version_requirement: ["0.13.7", "16.2.3"]
+      - match:
+          dependency_name: "tough-cookie"
+          version_requirement: [ "2.4.3", "4.1.3" ]
+      - match:
+          dependency_name: "terser"
+          version_requirement: "3.17.0"
+      - match:
+          dependency_name: "express"
+          version_requirement: "4.18.2"
+      - match:
+          dependency_name: "qs"
+          version_requirement: "6.5.3"
+      - match:
+          dependency_name: "decode-uri-component"
+          version_requirement: "0.2.2"
+      - match:
+          dependency_name: "http-cache-semantics"
+          version_requirement: "4.1.1"
+      - match:
+          dependency_name: "json5"
+          version_requirement: ["1.0.2", "2.2.3"]
+      - match:
+          dependency_name: "extend-shallow"
+          version_requirement: "2.0.1"
+      - match:
+          dependency_name: "is-number"
+          version_requirement: "3.0.0"
+      - match:
+          dependency_name: "kind-of"
+          version_requirement: "3.2.2"
   - package_manager: "java:maven"
     directory: "/"
     update_schedule: "daily"
@@ -176,3 +212,16 @@ update_configs:
       - match:
           dependency_name: "org.springframework:spring-webflux"
           version_requirement: "5.3.9"
+      - match:
+          dependency_name: "commons-io:commons-io"
+          version_requirement: "2.7"
+      - match:
+          dependency_name: "org.keycloak:keycloak-core"
+          version_requirement: ["20.0.0","21.0.0"]
+      - match:
+          dependency_name: "org.keycloak:keycloak-dependencies-server-all"
+          version_requirement: [ "20.0.0","21.0.0"]
+      - match:
+          dependency_name: "org.keycloak:keycloak-services"
+          version_requirement: [ "20.0.0","21.0.0","21.0.1"]
+

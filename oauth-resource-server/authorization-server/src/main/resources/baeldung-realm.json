@@ -1718,6 +1718,6 @@
     "waitIncrementSeconds" : "60",
     "offlineSessionMaxLifespanEnabled" : "false"
   },
-  "keycloakVersion" : "8.0.0",
+  "keycloakVersion" : "22.0.0",
   "userManagedAccessAllowed" : false
 }

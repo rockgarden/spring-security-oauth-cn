@@ -95,6 +95,7 @@
 		<module>oauth-jwt/jwt-auth-server</module>
 		<module>oauth-sso/sso-authorization-server</module>
 		<module>oauth-legacy/oauth-zuul-gateway</module>
+        <module>oauth-legacy/oauth-microservices</module>
 		<module>oauth-resource-server/authorization-server</module>
 		<module>oauth-authorization-server/spring-authorization-server</module>
 		

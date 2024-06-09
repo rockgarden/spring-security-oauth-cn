@@ -6,7 +6,7 @@ spring:
           custom:
             client-id: ssoClient-1
             client-secret: ssoClientSecret-1
-            scope: read,write
+            scope: read,write,openid
             authorization-grant-type: authorization_code
             redirect-uri: http://localhost:8082/ui-one/login/oauth2/code/custom
         provider:
@@ -14,6 +14,7 @@ spring:
             authorization-uri: http://localhost:8083/auth/realms/baeldung/protocol/openid-connect/auth
             token-uri: http://localhost:8083/auth/realms/baeldung/protocol/openid-connect/token
             user-info-uri: http://localhost:8083/auth/realms/baeldung/protocol/openid-connect/userinfo
+            jwk-set-uri: http://localhost:8083/auth/realms/baeldung/protocol/openid-connect/certs
             user-name-attribute: preferred_username
   thymeleaf:
     cache: false

@@ -23,7 +23,6 @@ export class AppService {
     let params = new URLSearchParams();   
     params.append('grant_type','authorization_code');
     params.append('client_id', this.clientId);
-    params.append('client_secret', 'newClientSecret');
     params.append('redirect_uri', this.redirectUri);
     params.append('code',code);
 

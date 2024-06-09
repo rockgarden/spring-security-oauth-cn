@@ -42,7 +42,7 @@ public class ImplicitFlowLiveTest {
 		loginParams.put("client_id", clientId);
 		loginParams.put("response_type", "token");
 		loginParams.put("redirect_uri", REDIRECT_URL);
-		loginParams.put("scope", "read write");
+		loginParams.put("scope", "read write openid");
 
 		// user login
 		Response response = RestAssured.given().formParams(loginParams).get(authorizeUrl);

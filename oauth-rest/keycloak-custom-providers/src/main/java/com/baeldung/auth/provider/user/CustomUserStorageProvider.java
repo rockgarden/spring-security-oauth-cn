@@ -11,10 +11,9 @@ import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import org.keycloak.component.ComponentModel;
 import org.keycloak.credential.CredentialInput;
@@ -51,14 +50,14 @@ public class CustomUserStorageProvider implements UserStorageProvider,
     }
 
     @Override
-    public UserModel getUserById(String id, RealmModel realm) {
+    public UserModel getUserById(RealmModel realm, String id) {
         log.info("[I35] getUserById({})",id);
         StorageId sid = new StorageId(id);
-        return getUserByUsername(sid.getExternalId(),realm);
+        return getUserByUsername(realm, sid.getExternalId());
     }
 
     @Override
-    public UserModel getUserByUsername(String username, RealmModel realm) {
+    public UserModel getUserByUsername(RealmModel realm, String username) {
         log.info("[I41] getUserByUsername({})",username);
         try ( Connection c = DbUtil.getConnection(this.model)) {
             PreparedStatement st = c.prepareStatement("select username, firstName,lastName, email, birthDate from users where username = ?");
@@ -78,7 +77,7 @@ public class CustomUserStorageProvider implements UserStorageProvider,
     }
 
     @Override
-    public UserModel getUserByEmail(String email, RealmModel realm) {
+    public UserModel getUserByEmail(RealmModel realm, String email) {
         log.info("[I48] getUserByEmail({})",email);
         try ( Connection c = DbUtil.getConnection(this.model)) {
             PreparedStatement st = c.prepareStatement("select username, firstName,lastName, email, birthDate from users where email = ?");
@@ -156,12 +155,7 @@ public class CustomUserStorageProvider implements UserStorageProvider,
     }
 
     @Override
-    public List<UserModel> getUsers(RealmModel realm) {
-        return getUsers(realm,0, 5000); // Keep a reasonable maxResults 
-    }
-
-    @Override
-    public List<UserModel> getUsers(RealmModel realm, int firstResult, int maxResults) {
+    public Stream<UserModel> getGroupMembersStream(RealmModel realm, GroupModel group, Integer firstResult, Integer maxResults) {
         log.info("[I113] getUsers: realm={}", realm.getName());
         
         try ( Connection c = DbUtil.getConnection(this.model)) {
@@ -174,7 +168,7 @@ public class CustomUserStorageProvider implements UserStorageProvider,
             while(rs.next()) {
                 users.add(mapUser(realm,rs));
             }
-            return users;
+            return users.stream();
         }
         catch(SQLException ex) {
             throw new RuntimeException("Database error:" + ex.getMessage(),ex);
@@ -182,15 +176,10 @@ public class CustomUserStorageProvider implements UserStorageProvider,
     }
 
     @Override
-    public List<UserModel> searchForUser(String search, RealmModel realm) {
-        return searchForUser(search,realm,0,5000);
-    }
-
-    @Override
-    public List<UserModel> searchForUser(String search, RealmModel realm, int firstResult, int maxResults) {
+    public Stream<UserModel> searchForUserStream(RealmModel realm, String search, Integer firstResult, Integer maxResults) {
         log.info("[I139] searchForUser: realm={}", realm.getName());
-        
-        try ( Connection c = DbUtil.getConnection(this.model)) {
+
+        try (Connection c = DbUtil.getConnection(this.model)) {
             PreparedStatement st = c.prepareStatement("select username, firstName,lastName, email, birthDate from users where username like ? order by username limit ? offset ?");
             st.setString(1, search);
             st.setInt(2, maxResults);
@@ -198,41 +187,24 @@ public class CustomUserStorageProvider implements UserStorageProvider,
             st.execute();
             ResultSet rs = st.getResultSet();
             List<UserModel> users = new ArrayList<>();
-            while(rs.next()) {
-                users.add(mapUser(realm,rs));
+            while (rs.next()) {
+                users.add(mapUser(realm, rs));
             }
-            return users;
+            return users.stream();
+        } catch (SQLException ex) {
+            throw new RuntimeException("Database error:" + ex.getMessage(), ex);
         }
-        catch(SQLException ex) {
-            throw new RuntimeException("Database error:" + ex.getMessage(),ex);
-        }
     }
 
     @Override
-    public List<UserModel> searchForUser(Map<String, String> params, RealmModel realm) {
-        return searchForUser(params,realm,0,5000);
+    public Stream<UserModel> searchForUserStream(RealmModel realm, Map<String, String> params, Integer firstResult, Integer maxResults) {
+        return getGroupMembersStream(realm, null, firstResult, maxResults);
     }
 
     @Override
-    public List<UserModel> searchForUser(Map<String, String> params, RealmModel realm, int firstResult, int maxResults) {
-        return getUsers(realm, firstResult, maxResults);
+    public Stream<UserModel> searchForUserByUserAttributeStream(RealmModel realm, String attrName, String attrValue) {
+        return Stream.empty();
     }
-
-    @Override
-    public List<UserModel> getGroupMembers(RealmModel realm, GroupModel group, int firstResult, int maxResults) {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public List<UserModel> getGroupMembers(RealmModel realm, GroupModel group) {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public List<UserModel> searchForUserByUserAttribute(String attrName, String attrValue, RealmModel realm) {
-        return Collections.emptyList();
-    }
-
     
     //------------------- Implementation 
     private UserModel mapUser(RealmModel realm, ResultSet rs) throws SQLException {
@@ -247,4 +219,5 @@ public class CustomUserStorageProvider implements UserStorageProvider,
         
         return user;
     }
+
 }

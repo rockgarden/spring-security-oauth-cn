@@ -42,7 +42,7 @@ public class AuthorizationCodeLiveTest {
 		loginParams.put("client_id", CLIENT_ID);
 		loginParams.put("response_type", "code");
 		loginParams.put("redirect_uri", REDIRECT_URL);
-		loginParams.put("scope", "read write");
+		loginParams.put("scope", "read write openid");
 
 		// user login
 		Response response = RestAssured.given().formParams(loginParams).get(authorizeUrl);

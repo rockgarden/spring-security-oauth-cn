@@ -1,5 +1,11 @@
 package com.baeldung.auth.provider.user;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import javax.sql.DataSource;
+
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
@@ -8,8 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.boot.web.server.WebServer;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,18 +25,12 @@ import org.springframework.web.client.RestTemplate;
 
 import com.baeldung.auth.AuthorizationServerApp;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import javax.sql.DataSource;
-
-import org.junit.jupiter.api.BeforeAll;
-
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = { AuthorizationServerApp.class }, webEnvironment = WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = { AuthorizationServerApp.class }, webEnvironment = WebEnvironment.DEFINED_PORT)
 @ActiveProfiles("test")
-public class ContextIntegrationLiveTest {
+public class ContextIntegrationTest {
     
-    private static final Logger log = LoggerFactory.getLogger(ContextIntegrationLiveTest.class);
+    private static final Logger log = LoggerFactory.getLogger(ContextIntegrationTest.class);
     
     @LocalServerPort
     int serverPort;

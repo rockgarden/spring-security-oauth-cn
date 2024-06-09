@@ -146,6 +146,7 @@ public class AuthorizationServerLiveTest {
         params.put("client_id", "jwtClient");
         params.put("redirect_uri", REDIRECT_URL);
         params.put("client_secret", "jwtClientSecret");
+        params.put("scope", "openid");
         response = RestAssured
           .given()
           .formParams(params)

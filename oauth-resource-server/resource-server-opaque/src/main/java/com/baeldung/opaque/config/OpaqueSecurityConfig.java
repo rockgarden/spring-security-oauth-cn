@@ -1,13 +1,14 @@
 package com.baeldung.opaque.config;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
-public class OpaqueSecurityConfig extends WebSecurityConfigurerAdapter {
+public class OpaqueSecurityConfig {
 
     @Value("${spring.security.oauth2.resourceserver.opaque.introspection-uri}")
     String introspectionUri;
@@ -18,15 +19,16 @@ public class OpaqueSecurityConfig extends WebSecurityConfigurerAdapter {
     @Value("${spring.security.oauth2.resourceserver.opaque.introspection-client-secret}")
     String clientSecret;
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {// @formatter:off
-        http
-          .authorizeRequests(authz -> authz
-              .antMatchers(HttpMethod.GET, "/bars/**").hasAuthority("SCOPE_read")
-              .antMatchers(HttpMethod.POST, "/bars").hasAuthority("SCOPE_write")
-              .anyRequest().authenticated())
-          .oauth2ResourceServer(oauth2 -> oauth2
-              .opaqueToken(token -> token.introspectionUri(this.introspectionUri)
-                  .introspectionClientCredentials(this.clientId, this.clientSecret)));// @formatter:on
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.authorizeRequests(authz -> authz.antMatchers(HttpMethod.GET, "/bars/**")
+            .hasAuthority("SCOPE_read")
+            .antMatchers(HttpMethod.POST, "/bars")
+            .hasAuthority("SCOPE_write")
+            .anyRequest()
+            .authenticated())
+            .oauth2ResourceServer(oauth2 -> oauth2.opaqueToken(token -> token.introspectionUri(this.introspectionUri)
+                .introspectionClientCredentials(this.clientId, this.clientSecret)));
+        return http.build();
     }
 }

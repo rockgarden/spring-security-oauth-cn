@@ -2,10 +2,18 @@ package com.baeldung.auth.config;
 
 import java.io.File;
 
+import org.keycloak.Config.Scope;
+import org.keycloak.common.Profile;
+import org.keycloak.common.profile.PropertiesFileProfileConfigResolver;
+import org.keycloak.common.profile.PropertiesProfileConfigResolver;
 import org.keycloak.platform.PlatformProvider;
 import org.keycloak.services.ServicesLogger;
 
 public class SimplePlatformProvider implements PlatformProvider {
+
+    public SimplePlatformProvider() {
+        Profile.configure(new PropertiesProfileConfigResolver(System.getProperties()), new PropertiesFileProfileConfigResolver());
+    }
 
     Runnable shutdownHook;
 
@@ -33,10 +41,20 @@ public class SimplePlatformProvider implements PlatformProvider {
             }
         }.start();
     }
-    
+
     @Override
-	public File getTmpDirectory() {
-		return new File(System.getProperty("java.io.tmpdir"));
-	}
+    public File getTmpDirectory() {
+        return new File(System.getProperty("java.io.tmpdir"));
+    }
+
+    @Override
+    public ClassLoader getScriptEngineClassLoader(Scope scriptProviderConfig) {
+        return null;
+    }
+
+    @Override
+    public String name() {
+        return "oauth-authorization-server";
+    }
 
 }

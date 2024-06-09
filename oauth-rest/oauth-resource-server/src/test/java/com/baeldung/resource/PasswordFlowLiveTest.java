@@ -38,7 +38,7 @@ public class PasswordFlowLiveTest {
 		params.put("client_id", clientId);
 		params.put("username", username);
 		params.put("password", password);
-		params.put("scope", "read write");
+		params.put("scope", "read write openid");
 		final Response response = RestAssured.given().auth().preemptive().basic(clientId, CLIENT_SECRET).and()
 				.with().params(params).when().post(AUTH_SERVER + "/token");
 		return response.jsonPath().getString("access_token");
