@@ -6,7 +6,6 @@ import { RouterModule }   from '@angular/router';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home.component';
 import { FooComponent } from './foo.component';
-import {AppService} from './app.service'
 
 @NgModule({
   declarations: [
@@ -20,7 +19,7 @@ import {AppService} from './app.service'
     RouterModule.forRoot([
      { path: '', component: HomeComponent, pathMatch: 'full' }], {onSameUrlNavigation: 'reload'})
   ],
-  providers: [AppService],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
