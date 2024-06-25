@@ -49,87 +49,120 @@
 
     现在我们已经设置好 Keycloak 服务器，我们将创建一个自定义协议映射器并在 Keycloak 服务器中进行配置。
 
-4.1. 依赖关系
+    1. 依赖关系
 
-我们的自定义协议映射器是一个创建 JAR 文件的常规 Maven 项目。
+        我们的自定义协议映射器是一个创建 JAR 文件的常规 Maven 项目。
 
-首先，让我们在 pom.xml 中声明 keycloak-core、keycloak-server-spi、keycloak-server-spi-private 和 keycloak-services 依赖项：
+        首先，让我们在 pom.xml 中声明 keycloak-core、keycloak-server-spi、keycloak-server-spi-private 和 keycloak-services 依赖项：
 
-```xml
-<dependency>
-    <groupId>org.keycloak</groupId>
-    <artifactId>keycloak-core</artifactId>
-    <scope>provided</scope>
-    <version>${keycloak.version}</version>
-</dependency>
-<dependency>
-    <groupId>org.keycloak</groupId>
-    <artifactId>keycloak-server-spi</artifactId>
-    <scope>provided</scope>
-    <version>${keycloak.version}</version>
-</dependency>
-<dependency>
-    <groupId>org.keycloak</groupId>
-    <artifactId>keycloak-server-spi-private</artifactId>
-    <scope>provided</scope>
-    <version>${keycloak.version}</version>
-</dependency>
-<dependency>
-    <groupId>org.keycloak</groupId>
-    <artifactId>keycloak-services</artifactId>
-    <scope>provided</scope>
-    <version>${keycloak.version}</version>
-</dependency>
-```
+        ```xml
+        <dependency>
+            <groupId>org.keycloak</groupId>
+            <artifactId>keycloak-core</artifactId>
+            <scope>provided</scope>
+            <version>${keycloak.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.keycloak</groupId>
+            <artifactId>keycloak-server-spi</artifactId>
+            <scope>provided</scope>
+            <version>${keycloak.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.keycloak</groupId>
+            <artifactId>keycloak-server-spi-private</artifactId>
+            <scope>provided</scope>
+            <version>${keycloak.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.keycloak</groupId>
+            <artifactId>keycloak-services</artifactId>
+            <scope>provided</scope>
+            <version>${keycloak.version}</version>
+        </dependency>
+        ```
 
-4.2. 扩展 AbstractOIDCProtocolMapper 类
+    2. 扩展 AbstractOIDCProtocolMapper 类
 
-现在让我们创建协议映射器。为此，我们扩展 AbstractOIDCProtocolMapper 类并实现所有抽象方法：
+        现在让我们创建协议映射器。为此，我们扩展 AbstractOIDCProtocolMapper 类并实现所有抽象方法：
 
-![CustomProtocolMapper](/oauth-rest/keycloak-custom-providers/src/main/java/com/baeldung/auth/provider/mapper/CustomProtocolMapper.java)
+        ![CustomProtocolMapper](/oauth-rest/keycloak-custom-providers/src/main/java/com/baeldung/auth/provider/mapper/CustomProtocolMapper.java)
 
-我们选择"custom-protocol-mapper"作为提供者 ID，也就是令牌映射器的 ID。我们需要这个 ID 来配置 Keycloak 服务器中的协议映射器。
+        我们选择"custom-protocol-mapper"作为提供者 ID，也就是令牌映射器的 ID。我们需要这个 ID 来配置 Keycloak 服务器中的协议映射器。
 
-主要方法是 setClaim()。它将我们的数据添加到令牌中。我们的 setClaim() 实现只是将 Baeldung 文本添加到令牌中。
+        主要方法是 setClaim()。它将我们的数据添加到令牌中。我们的 setClaim() 实现只是将 Baeldung 文本添加到令牌中。
 
-getDisplayType() 和 getHelpText() 方法用于管理控制台。getDisplayType() 方法定义了列出协议映射器时在管理控制台中显示的文本。getHelpText() 方法是我们选择协议映射器时显示的工具提示文本。
+        getDisplayType() 和 getHelpText() 方法用于管理控制台。getDisplayType() 方法定义了列出协议映射器时在管理控制台中显示的文本。getHelpText() 方法是我们选择协议映射器时显示的工具提示文本。
 
-4.3. 将所有内容整合在一起
+    3. 将所有内容整合在一起
 
-我们不能忘记创建一个服务定义文件并将其添加到项目中。该文件应命名为 org.keycloak.protocol.ProtocolMapper，并放置在最终 JAR 的 META-INF/services 目录中。此外，该文件的内容是自定义协议映射器实现的完全限定类名：
+        我们不能忘记创建一个服务定义文件并将其添加到项目中。该文件应命名为 org.keycloak.protocol.ProtocolMapper，并放置在最终 JAR 的 META-INF/services 目录中。此外，该文件的内容是自定义协议映射器实现的完全限定类名：
 
-`com.baeldung.auth.provider.mapper.CustomProtocolMapper`
+        `com.baeldung.auth.provider.mapper.CustomProtocolMapper`
 
-> 文件路径：src/resources/META-INF/services
+        > 文件路径：src/resources/META-INF/services
 
-现在，项目可以运行了。首先，我们使用 Maven 安装命令创建一个 JAR 文件：
+        现在，项目可以运行了。首先，我们使用 Maven 安装命令创建一个 JAR 文件：
 
-`mvn clean install`
+        `mvn clean install`
 
-然后，将 JAR 文件添加到 Keycloak 的 providers 目录中，将其部署到 Keycloak 中。之后，我们必须重启服务器，用 JAR 文件中的实现更新服务器的提供程序注册表：
+        然后，将 JAR 文件添加到 Keycloak 的 providers 目录中，将其部署到 Keycloak 中。之后，我们必须重启服务器，用 JAR 文件中的实现更新服务器的提供程序注册表：
 
-`$ bin/kc.sh start-dev`
+        `$ bin/kc.sh start-dev`
 
-从控制台输出中可以看到，Keycloak 注册了我们的自定义协议映射器：
+        从控制台输出中可以看到，Keycloak 注册了我们的自定义协议映射器：
 
-```log
-Updating the configuration and installing your custom providers, if any. Please wait.
-2023-04-05 14:55:42,588 WARN  [org.keycloak.services] (build-108) KC-SERVICES0047: custom-protocol-mapper (com.baeldung.auth.provider.CustomProtocolMapper) is implementing the internal SPI protocol-mapper.
-```
+        ```log
+        Updating the configuration and installing your custom providers, if any. Please wait.
+        2023-04-05 14:55:42,588 WARN  [org.keycloak.services] (build-108) KC-SERVICES0047: custom-protocol-mapper (com.baeldung.auth.provider.CustomProtocolMapper) is implementing the internal SPI protocol-mapper.
+        ```
 
-最后，如果我们进入 Keycloak 管理控制台的提供商信息(Provider info)页面，就会看到我们的自定义协议映射器。
+        最后，如果我们进入 Keycloak 管理控制台的提供商信息(Provider info)页面，就会看到我们的自定义协议映射器。
 
-> KC 25 位于 \Server info\Providers
+        > KC 25 位于 \Server info\Providers
 
-现在，我们可以配置服务器使用自定义协议映射器了。
+        现在，我们可以配置服务器使用自定义协议映射器了。
 
-4.4. 配置客户端
+    4. 配置客户端
 
-在 Keycloak 中，我们可以使用管理面板添加自定义申明(add custom claims using the admin panel)。为此，我们需要进入管理控制台的客户端。回想一下，我们之前创建了客户端 client-app。然后，我们导航到客户端作用域(Client scopes)选项卡。
+        在 Keycloak 中，我们可以使用管理面板添加自定义申明(add custom claims using the admin panel)。为此，我们需要进入管理控制台的客户端。回想一下，我们之前创建了客户端 client-app。然后，我们导航到客户端作用域(Client scopes)选项卡。
 
-现在，让我们点击 client-app-dedicated，进入其 Add mapper By 配置，创建一个新映射。
+        现在，让我们点击 client-app-dedicated，进入其 Add mapper By configuration，创建一个新映射。
 
-在这里，我们需要为自定义映射器输入映射器类型。我们将输入 "Custom Token Mapper"（自定义令牌映射器），这是我们在 CustomProtocolMapper 类中的 getDisplayType() 方法中使用的值：
+        在这里，我们需要为自定义映射器输入映射器类型(Mapper type)。我们将输入 "Custom Token Mapper"（自定义令牌映射器），这是我们在 CustomProtocolMapper 类中的 getDisplayType() 方法中使用的值：
 
-自定义协议映射器
-接下来，我们给映射器命名，并输入 
+        接下来，我们给映射器命名并保存。然后，当我们回到专用客户端应用程序时，就会在列表中看到新的映射。
+
+        现在，我们可以测试我们的协议映射器了。
+
+5. 测试
+
+    让我们使用"客户端凭证(Client Credential)"授权类型为客户端获取一个访问令牌：
+
+    ```shell
+    curl --location --request POST 'http://server-ip:server-port/auth/realms/baeldung/protocol/openid-connect/token' \
+    --header 'Content-Type: application/x-www-form-urlencoded' \
+    --data-urlencode 'client_id=client-app' \
+    --data-urlencode 'client_secret=<client-secret>' \
+    --data-urlencode 'grant_type=client_credentials'
+    ```
+
+    如果我们获得一个访问令牌并使用 [jwt.io](https://jwt.io/) 对其进行解码，我们会在令牌的主体中发现测试请求：
+
+    ```json
+    {
+        "exp": 1680679982,
+        "iat": 1680679682,
+        ...
+        "email_verified": false,
+        "test": "Baeldung",
+        "preferred_username": "service-account-client-app",
+        "clientAddress": "192.168.198.1"
+    }
+    ```
+
+    我们可以看到，测试请求的值是 Baeldung。
+
+6. 结论
+
+    在本文中，我们在 Keycloak 服务器中实现了一个自定义协议映射器。一般来说，令牌是一组属性或权利要求。协议映射器将提供向令牌添加自定义声明的选项。
