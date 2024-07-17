@@ -1413,13 +1413,13 @@
         "subComponents": {},
         "config": {
           "keystorePassword": [
-            "**********"
+            "mypass"
           ],
           "keyAlias": [
             "mytest"
           ],
           "keyPassword": [
-            "**********"
+            "mypass"
           ],
           "active": [
             "true"
