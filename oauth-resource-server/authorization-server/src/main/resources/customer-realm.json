@@ -1,6 +1,6 @@
 {
-  "id": "baeldung",
-  "realm": "baeldung",
+  "id": "customer",
+  "realm": "customer",
   "notBefore": 0,
   "revokeRefreshToken": false,
   "refreshTokenMaxReuse": 0,
