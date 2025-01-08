@@ -1,6 +1,6 @@
 {
-  "id": "baeldung",
-  "realm": "baeldung",
+  "id": "customer",
+  "realm": "customer",
   "notBefore": 0,
   "revokeRefreshToken": false,
   "refreshTokenMaxReuse": 0,
@@ -1413,13 +1413,13 @@
         "subComponents": {},
         "config": {
           "keystorePassword": [
-            "**********"
+            "mypass"
           ],
           "keyAlias": [
             "mytest"
           ],
           "keyPassword": [
-            "**********"
+            "mypass"
           ],
           "active": [
             "true"
